@@ -1,0 +1,6 @@
+1. Phaser life cycle per 1 scene
+
+constructor => preload => create (self loop)
+
+2. file structure
+
