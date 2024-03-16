@@ -25,7 +25,8 @@ export default class Game extends Phaser.Scene
             // we fix cordinate to middle of phaser screen
             // x,y orordinate start from top left ( -> = +x and V = + y)
             // we fix  width: 480, height: 640 so 240,320 = middle of the screen
-            this.add.image(240, 320, 'background')
+            // .setScrollFactor(1, 0) = set as not scrollable
+            this.add.image(240, 320, 'background').setScrollFactor(1, 0)
             // we should use physic.add because it has to be involved with gravity
             // this.physics.add.image(240, 320, 'platform').setScale(0.5)
 
