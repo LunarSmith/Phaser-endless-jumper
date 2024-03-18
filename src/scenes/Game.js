@@ -30,9 +30,11 @@ export default class Game extends Phaser.Scene
             // we should use physic.add because it has to be involved with gravity
             // this.physics.add.image(240, 320, 'platform').setScale(0.5)
 
+
             // create the StaticGroup (group for)
             // static = not effected by gravity but external force only
-            const platforms = this.physics.add.staticGroup()
+            // change to use class property intead of local variable
+            this.platforms = this.physics.add.staticGroup()
             // then create 5 platforms and assign the group
             for (let i = 0; i < 5; ++i)
                 {
@@ -40,9 +42,9 @@ export default class Game extends Phaser.Scene
                     const x = Phaser.Math.Between(80, 400)
 
                     const y = 150 * i
-                    
+                     
                     /* @type {Phaser.Physics.Arcade.Sprite} */
-                    const platform = platforms.create(x, y, 'platform')
+                    const platform = this.platforms.create(x, y, 'platform')
                     platform.scale = 0.5
                     
                     /* @type {Phaser.Physics.Arcade.StaticBody} */
@@ -55,7 +57,7 @@ export default class Game extends Phaser.Scene
             this.player = this.physics.add.sprite(240, 320, 'bunny-stand').setScale(0.5)
 
             // .add.collider(a,b) = set the rule that object a and b will collide
-            this.physics.add.collider(platforms, this.player)
+            this.physics.add.collider(this.platforms, this.player)
             
             // we can set which direction will include in collision checking and which side is not
             // in this case we will check collision on under player body only
@@ -63,12 +65,33 @@ export default class Game extends Phaser.Scene
             this.player.body.checkCollision.left = false
             this.player.body.checkCollision.right = false
 
+            
+            // set camera to follow player because it is an endless jumper
+            this.cameras.main.startFollow(this.player)
 
 
         }
         //will work in every scene
         update()
         {   
+            // .iterate = make this run forever
+            // child = in each time it run (each time platform spawn) it will do child =>{}
+            this.platforms.children.iterate(child => {
+                /** @type {Phaser.Physics.Arcade.Sprite} */
+                const platform = child
+                // check y coordinate of platform scroll down (+y = down)
+                const scrollY = this.cameras.main.scrollY
+                // if platform leave main camera more than 700 pixel (platform is higher than main camera coordinate(player))
+                if (platform.y >= scrollY + 700)
+                {
+                    //let it go down a little bit so we can see platform spawn continueously 
+                    //(because if we doesn't do it will think that coordinate is out of screen and will not create)
+                    platform.y = scrollY - Phaser.Math.Between(50, 100)
+                    platform.body.updateFromGameObject()
+                }
+            })
+
+
             //check if body of player sprite touching anything on down (under) side of the sprite
             const touchingDown = this.player.body.touching.down
             if (touchingDown)

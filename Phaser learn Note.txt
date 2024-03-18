@@ -1,9 +1,17 @@
-[continue at page 32]
+[continue at page 34]
 
 
 1. Phaser life cycle per 1 scene
 
 constructor => preload => create (self loop)
 
-2. file structure
+2. we cannot use something before declare
+    a. this.cameras.main.startFollow(this.player)
+    b. this.player = this.physics.add.sprite(240, 320, 'bunny-stand').setScale(0.5)
+
+    we cannot write a before b
+
+3. use class property than local variable for variable use across file
+this. platforms >>> const platforms
+
 
