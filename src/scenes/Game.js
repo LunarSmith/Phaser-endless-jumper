@@ -103,8 +103,30 @@ export default class Game extends Phaser.Scene
 
             // make camera focus the player and keep player in screen
             this.cameras.main.startFollow(this.player)
+            // set the horizontal dead zone to 1.5x game width
+            //  A dead zone is an area around the player where the camera won’t scroll
+            // so camera will not follow player when jump on the same platform
+            // that's mean when player doesn't jump higher than 1.5 times of width camera will not go
+            this.cameras.main.setDeadzone(this.scale.width * 1.5)
+
+            // wrap [;ayer to make player stays in
+            this.horizontalWrap(this.player)
 
 
+        }
 
+        //creating new function for game
+        horizontalWrap(sprite)
+        {
+          const halfWidth= sprite.displayWidth*0.5
+          const gameWidth= this.scale.width
+          if (sprite.x<-halfWidth)
+          {
+              sprite.x=gameWidth+halfWidth
+          }
+          elseif (sprite.x >gameWidth+halfWidth)
+          {
+              sprite.x=-halfWidth
+          }
         }
  }
