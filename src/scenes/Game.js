@@ -2,7 +2,17 @@ import Phaser from '../lib/phaser.js'
 
 export default class Game extends Phaser.Scene
 {
-    constructor()
+        // DECLARE local variable to store attribute of its physics type in variable
+        /** @type {Phaser.Physics.Arcade.StaticGroup} */ 
+        platforms
+
+        /** @type {Phaser.Physics.Arcade.Sprite} */ 
+        player
+
+        /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */ 
+        cursors
+
+        constructor()
         {
             // every scene must have unique key (unique scene)
             super('game')
@@ -14,12 +24,14 @@ export default class Game extends Phaser.Scene
             this.load.image('background', 'assets/bg_layer1.png');
             this.load.image('platform', 'assets/ground_grass.png');
             this.load.image('bunny-stand', 'assets/bunny1_stand.png');
-
-
+            // assign cursor = keyboard input movement with up down left right
+            this.cursors = this.input.keyboard.createCursorKeys()
         }
         // create() => called when asset are all loaded
         // this will de done only first time game is running
         // only asset that already loaded can be used in create()
+
+
         create()
         {
             // we fix cordinate to middle of phaser screen
@@ -31,9 +43,10 @@ export default class Game extends Phaser.Scene
             // this.physics.add.image(240, 320, 'platform').setScale(0.5)
 
 
-            // create the StaticGroup (group for)
+            // create the StaticGroup (group for something)
             // static = not effected by gravity but external force only
             // change to use class property intead of local variable
+            // platform = static group
             this.platforms = this.physics.add.staticGroup()
             // then create 5 platforms and assign the group
             for (let i = 0; i < 5; ++i)
@@ -44,10 +57,12 @@ export default class Game extends Phaser.Scene
                     const y = 150 * i
                      
                     /* @type {Phaser.Physics.Arcade.Sprite} */
+                    //  'platform' = sprite (image) platform
                     const platform = this.platforms.create(x, y, 'platform')
                     platform.scale = 0.5
                     
                     /* @type {Phaser.Physics.Arcade.StaticBody} */
+                    // body of
                     const body = platform.body
                     body.updateFromGameObject()
                 }
@@ -71,8 +86,8 @@ export default class Game extends Phaser.Scene
 
 
         }
-        //will work in every scene
-        update()
+        //t ,dt = will work in every frame
+        update(t,dt)
         {   
             // .iterate = make this run forever
             // child = in each time it run (each time platform spawn) it will do child =>{}
@@ -100,6 +115,16 @@ export default class Game extends Phaser.Scene
                 // -y = go up
                 this.player.setVelocityY(-300)
             }
+             // left and right input logic 
+            if (this.cursors.left.isDown && !touchingDown) {  
+                this.player.setVelocityX(-200)
+            }  
+            else if (this.cursors.right.isDown && !touchingDown)  { 
+            this.player.setVelocityX(200) 
+            } else  { 
+            // stop movement if not left or right 
+            this.player.setVelocityX(0) 
+            } 
 
             // make camera focus the player and keep player in screen
             this.cameras.main.startFollow(this.player)
@@ -109,15 +134,17 @@ export default class Game extends Phaser.Scene
             // that's mean when player doesn't jump higher than 1.5 times of width camera will not go
             this.cameras.main.setDeadzone(this.scale.width * 1.5)
 
-            // wrap [;ayer to make player stays in
-            this.horizontalWrap(this.player)
 
+            // call this at last line on update to prevent frame break
+            // wrap player to make player stays in frame
+            this.horizontalWrap(this.player)
 
         }
 
         //creating new function for game
         horizontalWrap(sprite)
         {
+            // lock sprite not to exceed half of player by update player position at edge when trying to cross
           const halfWidth= sprite.displayWidth*0.5
           const gameWidth= this.scale.width
           if (sprite.x<-halfWidth)

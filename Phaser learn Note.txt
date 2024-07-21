@@ -1,4 +1,4 @@
-[continue at page 34 to read and try to understand]
+[continue at page 36 no read yet]
 
 
 1. Phaser life cycle per 1 scene
