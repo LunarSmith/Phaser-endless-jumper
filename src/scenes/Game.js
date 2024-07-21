@@ -13,6 +13,10 @@ export default class Game extends Phaser.Scene
         /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */ 
         cursors
 
+        //The primary use of a Physics Group is a way to collect together physics enable objects that share the same intrinsic structure into a single pool.
+         /** @type {Phaser.Physics.Arcade.Group} */
+        carrots
+
         constructor()
         {
             // every scene must have unique key (unique scene)
@@ -90,6 +94,11 @@ export default class Game extends Phaser.Scene
             //create carrot from class (that we created in toher file)
             const carrot = new Carrot(this, 240, 320, 'carrot')  
             this.add.existing(carrot)
+            // set carrot (from const carrot) have physic as Carrot class by add itself to group of classtype Carrot
+            this.carrots = this.physics.add.group({ 
+                classType: Carrot
+            })
+            this.carrots.get(240, 320, 'carrot')
 
         }
         //t ,dt = will work in every frame
