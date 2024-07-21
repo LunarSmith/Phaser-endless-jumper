@@ -1,4 +1,5 @@
 import Phaser from '../lib/phaser.js'
+import Carrot from './Carrot.js'
 
 export default class Game extends Phaser.Scene
 {
@@ -15,6 +16,7 @@ export default class Game extends Phaser.Scene
         constructor()
         {
             // every scene must have unique key (unique scene)
+            // super() in js = call parent class = call Phaser.Scene with parameter 'game' to assign this scene as 'game'
             super('game')
         }
             // load asset before using in the game
@@ -24,6 +26,7 @@ export default class Game extends Phaser.Scene
             this.load.image('background', 'assets/bg_layer1.png');
             this.load.image('platform', 'assets/ground_grass.png');
             this.load.image('bunny-stand', 'assets/bunny1_stand.png');
+            this.load.image('carrot', 'assets/carrot.png') 
             // assign cursor = keyboard input movement with up down left right
             this.cursors = this.input.keyboard.createCursorKeys()
         }
@@ -83,7 +86,10 @@ export default class Game extends Phaser.Scene
             
             // set camera to follow player because it is an endless jumper
             this.cameras.main.startFollow(this.player)
-
+            
+            //create carrot from class (that we created in toher file)
+            const carrot = new Carrot(this, 240, 320, 'carrot')  
+            this.add.existing(carrot)
 
         }
         //t ,dt = will work in every frame
@@ -151,7 +157,7 @@ export default class Game extends Phaser.Scene
           {
               sprite.x=gameWidth+halfWidth
           }
-          elseif (sprite.x >gameWidth+halfWidth)
+          else if (sprite.x >gameWidth+halfWidth)
           {
               sprite.x=-halfWidth
           }
