@@ -3,7 +3,10 @@ import Phaser from '../lib/phaser.js'
 
 //create class of carrot as sprite class
 // we create as class to hide config that used in this sprite/chracter only
-export default class Carrot extends Phaser.GameObjects.Sprite
+// as we willuse in physic group we can change from Phaser.GameObjects.Sprite
+// export default class Carrot extends Phaser.GameObjects.Sprite
+// to
+export default class Carrot extends Phaser.Physics.Arcade.Sprite
 {
     // create local variable to use under Carrot class only
     /**

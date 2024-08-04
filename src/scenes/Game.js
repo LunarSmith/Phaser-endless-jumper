@@ -94,11 +94,15 @@ export default class Game extends Phaser.Scene
             //create carrot from class (that we created in toher file)
             const carrot = new Carrot(this, 240, 320, 'carrot')  
             this.add.existing(carrot)
-            // set carrot (from const carrot) have physic as Carrot class by add itself to group of classtype Carrot
+            // assign carrot (from upper most) as physic group with class Carrot (from Carrot.js)
             this.carrots = this.physics.add.group({ 
                 classType: Carrot
             })
-            this.carrots.get(240, 320, 'carrot')
+            // test carrot with this line
+            // this.carrots.get(240, 320, 'carrot')
+
+            // add carrot but specify that carrot will spawn on platform only
+            this.physics.add.collider(this.platforms, this.carrots) 
 
         }
         //t ,dt = will work in every frame
@@ -171,4 +175,31 @@ export default class Game extends Phaser.Scene
               sprite.x=-halfWidth
           }
         }
+
+    
+    // to spawn carrot on top of sprite something (mainly platform)
+    /**
+    * @param {Phaser.GameObjects.Sprite) sprite
+    */
+    addCarrotAbove (sprite)
+        {
+            const y = sprite.y - sprite.displayHeight
+            /** @type [Phaser. Physics. Arcade.Sprite} */
+            const carrot = this.carrots.get(sprite.x, y, 'carrot')
+            
+            this.add.existing(carrot)
+            
+            // update the physics body size
+            carrot.body.setSize(carrot.width, carrot.height)
+            
+            return carrot
+        }
+
+
+
+
+
+
+
+
  }
